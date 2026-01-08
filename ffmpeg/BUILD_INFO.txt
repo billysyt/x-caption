@@ -1,0 +1,51 @@
+FFmpeg Build Record
+===================
+Purpose: document the exact FFmpeg build bundled with X-Caption.
+Keep this file alongside the binaries shipped to customers.
+
+Project
+-------
+- Product name: X-Caption
+- Last updated (UTC): 2026-01-06 19:53:37 UTC
+
+Source & integrity
+------------------
+- FFmpeg version/tag: 7.1.1
+- Source URL: https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz
+- Source archive checksum (sha256): 733984395e0dbbe5c046abda2dc49a5544e7e0e1e2366bba849222ae9e3a03b1
+- Local source path (if applicable): build/ffmpeg_lgpl_macos/ffmpeg-7.1.1
+
+Build environment
+-----------------
+- OS/arch: macOS 15.5 (Darwin) / arm64
+- Compiler/toolchain: Apple clang 16.0.0 (clang-1600.0.26.6)
+- Build date/time (UTC): 2026-01-06 19:53:37 UTC
+
+Configuration
+-------------
+Paste the full "configuration:" line from `ffmpeg -version`:
+- configuration: --prefix=/opt/homebrew/Cellar/ffmpeg/7.1.1_2 --enable-shared --enable-pthreads --enable-version3 --cc=clang --host-cflags= --host-ldflags='-Wl,-ld_classic' --enable-ffplay --enable-gnutls --enable-gpl --enable-libaom --enable-libaribb24 --enable-libbluray --enable-libdav1d --enable-libharfbuzz --enable-libjxl --enable-libmp3lame --enable-libopus --enable-librav1e --enable-librist --enable-librubberband --enable-libsnappy --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtesseract --enable-libtheora --enable-libvidstab --enable-libvmaf --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxml2 --enable-libxvid --enable-lzma --enable-libfontconfig --enable-libfreetype --enable-frei0r --enable-libass --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libspeex --enable-libsoxr --enable-libzmq --enable-libzimg --disable-libjack --disable-indev=jack --enable-videotoolbox --enable-audiotoolbox --enable-neon
+- configuration: --prefix=build/ffmpeg_lgpl_macos/prefix --disable-gpl --disable-nonfree --enable-static --disable-shared --disable-ffplay --disable-doc --disable-debug --disable-libx264 --disable-libx265 --disable-libxvid --disable-libmp3lame --disable-libfdk_aac --disable-libvidstab
+
+Licensing flags (must be LGPL-only)
+-----------------------------------
+- --enable-gpl: NO
+- --enable-nonfree: NO
+
+External libraries enabled
+--------------------------
+List any external libraries enabled during configure (e.g., libopus, libvorbis):
+- appkit, avfoundation, bzlib, coreimage, iconv, metal, sdl2,
+  securetransport, zlib
+
+Output artifacts
+----------------
+- ffmpeg binary path: ffmpeg/ffmpeg
+- ffprobe binary path: ffmpeg/ffprobe
+- Checksums (sha256):
+  - ffmpeg/ffmpeg: 468da7f90c91ff5a709c516f0b5df8782c61ea9a9b4a02597943700f5226c4d7
+  - ffmpeg/ffprobe: 34c53c5377b19fea0424abcc3f5ce36de712c5b3d68dd134b1215f4b0739515e
+
+Notes
+-----
+Built on macOS with LGPL-only configuration (no --enable-gpl, no --enable-nonfree).

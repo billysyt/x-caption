@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+.venv*/
+
+# IDEs
+.idea/
+.vscode/
+
+# Build & distribution
+build/
+dist/
+static/ui/
+ui/.vite/
+ui/node_modules/
+installer/
+sample/
+
+# Runtime data
+data/
+
+# Logs
+build.log
+build_styled.log

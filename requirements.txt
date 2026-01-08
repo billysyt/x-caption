@@ -1,0 +1,15 @@
+# Audio processing
+soundfile>=0.12.0
+numpy>=1.24.0
+# Chinese conversion utilities
+opencc-python-reimplemented>=0.1.7
+# Flask web framework
+flask>=2.3.0
+# TLS certificates for webview proxy
+certifi>=2024.2.2
+# YouTube audio download
+yt-dlp>=2024.3.10
+# HTTP impersonation for Cloudflare-protected sites (yt-dlp supports <0.14)
+curl-cffi>=0.10,<0.14
+# Native desktop shell
+pywebview>=4.4.2

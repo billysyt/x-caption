@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>X-Caption</title>
+
+    <script src="/static/vendor/opencc/opencc.full.min.js"></script>
+
+    <link rel="stylesheet" href="/static/ui/app.css?v={{ VERSION }}" />
+    <script>
+      window.__APP_VERSION__ = "{{ VERSION }}";
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/static/ui/app.js?v={{ VERSION }}"></script>
+  </body>
+</html>

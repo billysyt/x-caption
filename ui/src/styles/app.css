@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* Capcut-style dark theme */
+    --primary-color: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-rgb: 37, 99, 235;
+
+    --secondary-color: #0b0f1a;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --border-color: #1f2937;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    min-width: 360px;
+    min-height: 640px;
+  }
+
+  body {
+    @apply font-sans bg-secondary text-text-primary antialiased overflow-hidden;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+}
+
+@layer components {
+  button.rounded-sm,
+  button.rounded,
+  button.rounded-md,
+  button.rounded-lg {
+    border-radius: 0.75rem;
+  }
+
+  .stt-select-dark button {
+    background: #111115 !important;
+    border-color: #2a2a32 !important;
+    color: #e5e7eb !important;
+    box-shadow: none !important;
+  }
+
+  .stt-select-dark button:hover {
+    border-color: #3a3a44 !important;
+  }
+
+  .stt-select-dark button span {
+    color: #e5e7eb !important;
+  }
+
+  .stt-select-dark [role="listbox"] {
+    background: #111115 !important;
+    border-color: #2a2a32 !important;
+    color: #e5e7eb !important;
+  }
+
+  .stt-select-dark [role="option"] {
+    color: #e5e7eb !important;
+  }
+
+  .stt-select-dark [role="option"]:hover {
+    background: #1a1a20 !important;
+  }
+}
+
+@layer utilities {
+  .pywebview-drag-region {
+    -webkit-app-region: drag;
+  }
+
+  .pywebview-no-drag {
+    -webkit-app-region: no-drag;
+  }
+
+  .pywebview-custom-drag .pywebview-drag-region {
+    -webkit-app-region: no-drag;
+  }
+
+  .stt-icon {
+    vertical-align: -0.125em;
+    display: inline-block;
+  }
+
+  .stt-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-secondary) var(--border-color);
+  }
+
+  .stt-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .stt-scrollbar::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 4px;
+  }
+
+  .stt-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--text-secondary);
+    border-radius: 4px;
+  }
+
+  .stt-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+  }
+
+  /* Force WKWebView/Safari to clip video layers to the player frame. */
+  .stt-video-frame {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    clip-path: inset(0);
+    contain: paint;
+  }
+
+  .processing-spinner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+    height: 20px;
+  }
+
+  .processing-bar {
+    width: 4px;
+    height: 18px;
+    background: #ffffff;
+    border-radius: 999px;
+    transform-origin: bottom;
+    animation: processing-bars 0.9s ease-in-out infinite;
+    opacity: 0.6;
+  }
+
+  .processing-bar-2 {
+    animation-delay: 0.12s;
+  }
+
+  .processing-bar-3 {
+    animation-delay: 0.24s;
+  }
+
+  .processing-bar-4 {
+    animation-delay: 0.36s;
+  }
+}
+
+@keyframes processing-bars {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.youtube-progress-active {
+  background-color: #ffffff;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+  background-size: 200% 100%;
+  animation: youtube-progress-sheen 1.1s linear infinite;
+}
+
+@keyframes youtube-progress-sheen {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
