@@ -35,6 +35,7 @@ _add_if_exists(datas, "static", "static")
 _add_if_exists(datas, "ffmpeg", "ffmpeg")
 _add_if_exists(datas, "whisper", "whisper")
 _add_if_exists(datas, "merge", "merge")
+_add_if_exists(datas, "node", "node")
 
 icon_path = None
 if sys.platform == "win32":
@@ -194,8 +195,8 @@ if sys.platform == "darwin":
             "CFBundleDisplayName": "X-Caption",
             "CFBundleExecutable": "x-caption",
             "CFBundleIdentifier": "com.billysyt.xcaption",
-            "CFBundleVersion": "0.1.0",
-            "CFBundleShortVersionString": "0.1.0",
+            "CFBundleVersion": "0.1.1",
+            "CFBundleShortVersionString": "0.1.1",
             "CFBundlePackageType": "APPL",
             "CFBundleSignature": "????",
             "LSMinimumSystemVersion": "10.13.0",

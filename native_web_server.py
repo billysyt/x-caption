@@ -59,7 +59,7 @@ from native_job_handlers import (
     _normalized_audio_filename,
 )
 from model_manager import get_whisper_model_info, whisper_model_status, download_whisper_model
-from whisper_cpp_runtime import resolve_whisper_model
+from whisper_cpp_runtime import resolve_whisper_model, resolve_whisper_engine, resolve_node_binary
 
 from native_ffmpeg import setup_ffmpeg_environment, test_ffmpeg, get_ffmpeg_path
 from download_media import download_url_media
@@ -175,12 +175,29 @@ def _write_update_cache(data: Dict[str, Any]) -> None:
 
 
 def is_youtube_url(raw_url: str) -> bool:
+    raw_url = normalize_youtube_url(raw_url)
     try:
         parsed = urlparse(raw_url)
     except ValueError:
         return False
     host = (parsed.hostname or "").lower()
     return host.endswith("youtube.com") or host.endswith("youtu.be") or host.endswith("music.youtube.com")
+
+
+def normalize_youtube_url(raw_url: str) -> str:
+    raw = str(raw_url or "").strip()
+    if not raw:
+        return raw
+    parsed = urlparse(raw)
+    if parsed.scheme:
+        return raw
+    candidate = raw.lstrip()
+    if candidate.startswith("//"):
+        return f"https:{candidate}"
+    host = candidate.lstrip("/").split("/", 1)[0].lower()
+    if host.endswith("youtube.com") or host.endswith("youtu.be") or host.endswith("music.youtube.com"):
+        return f"https://{candidate.lstrip('/')}"
+    return raw
 
 
 def is_http_url(raw_url: str) -> bool:
@@ -1072,6 +1089,9 @@ def create_app():
             whisper_status = whisper_model_status(get_models_dir())
             models_ready = bool(whisper_status.get("ready"))
             print(f"[HEALTH] Returning response: models_ready={models_ready}")
+            engine_path = resolve_whisper_engine()
+            engine_kind = "node" if engine_path and engine_path.suffix.lower() == ".mjs" else "binary"
+            node_path = resolve_node_binary() if engine_kind == "node" else None
 
             return jsonify({
                 "status": "healthy",
@@ -1079,6 +1099,9 @@ def create_app():
                 "redis_connected": True,  # Fake for compatibility
                 "queues": queue_lengths,
                 "ffmpeg_available": test_ffmpeg(),
+                "whisper_engine": str(engine_path) if engine_path else None,
+                "whisper_engine_kind": engine_kind if engine_path else None,
+                "node_available": bool(node_path) if engine_kind == "node" else None,
                 "models_ready": models_ready,
                 "whisper_model": whisper_status
             }), 200
@@ -2210,7 +2233,7 @@ def create_app():
     def import_youtube():
         try:
             payload = request.get_json(silent=True) or {}
-            url = str(payload.get("url") or "").strip()
+            url = normalize_youtube_url(payload.get("url") or "")
             if not url:
                 return jsonify({"error": "YouTube URL is required."}), 400
             if not is_youtube_url(url):
@@ -2227,7 +2250,7 @@ def create_app():
     def resolve_youtube_stream():
         try:
             payload = request.get_json(silent=True) or {}
-            url = str(payload.get("url") or "").strip()
+            url = normalize_youtube_url(payload.get("url") or "")
             if not url:
                 return jsonify({"error": "YouTube URL is required."}), 400
             if not is_youtube_url(url):
@@ -2244,7 +2267,7 @@ def create_app():
     def import_youtube_start():
         try:
             payload = request.get_json(silent=True) or {}
-            url = str(payload.get("url") or "").strip()
+            url = normalize_youtube_url(payload.get("url") or "")
             if not url:
                 return jsonify({"error": "YouTube URL is required."}), 400
             if not is_youtube_url(url):

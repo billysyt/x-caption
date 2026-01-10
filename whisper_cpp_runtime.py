@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 from typing import Optional, List, Dict, Any
@@ -129,6 +130,42 @@ def resolve_whisper_engine() -> Optional[Path]:
         if candidate and candidate.exists() and candidate.is_file():
             return candidate
     return None
+
+
+def resolve_node_binary() -> Optional[str]:
+    """Return a usable Node.js binary path if available."""
+    def _candidate_names() -> list[str]:
+        return ["node.exe", "node"] if os.name == "nt" else ["node"]
+
+    env_path = os.environ.get("XCAPTION_NODE")
+    if env_path:
+        candidate = Path(env_path).expanduser()
+        if candidate.exists():
+            if candidate.is_file():
+                return str(candidate)
+            if candidate.is_dir():
+                for name in _candidate_names():
+                    for subdir in ("", "bin"):
+                        node_path = candidate / subdir / name if subdir else candidate / name
+                        if node_path.exists() and node_path.is_file():
+                            return str(node_path)
+
+    bundle_dir = get_bundle_dir()
+    candidates: list[Path] = []
+    for name in _candidate_names():
+        candidates.extend([
+            bundle_dir / "node" / "bin" / name,
+            bundle_dir / "node" / name,
+            bundle_dir / "Resources" / "node" / "bin" / name,
+            bundle_dir / "Resources" / "node" / name,
+            bundle_dir / "whisper" / "node" / "bin" / name,
+            bundle_dir / "whisper" / "node" / name,
+        ])
+    for candidate in candidates:
+        if candidate.exists() and candidate.is_file():
+            return str(candidate)
+
+    return shutil.which("node")
 
 
 def resolve_whisper_model(model_path: Optional[str] = None) -> Optional[Path]:
@@ -282,6 +319,11 @@ def transcribe_whisper_cpp(
         progress_callback(10, "Starting transcription")
 
     if engine.suffix.lower() == ".mjs":
+        node_bin = resolve_node_binary()
+        if not node_bin:
+            raise RuntimeError(
+                "Node.js runtime not found. Install Node.js or set XCAPTION_NODE to its path."
+            )
         progress_marker = _PROGRESS_MARKER
         json_marker = _JSON_MARKER
         node_script = f"""
@@ -302,7 +344,7 @@ const result = await transcribeAudio({json.dumps(str(audio_path))}, {{
 }});
 console.log('{json_marker}' + JSON.stringify(result));
 """.strip()
-        cmd = ["node", "--input-type=module", "-e", node_script]
+        cmd = [node_bin, "--input-type=module", "-e", node_script]
         logger.info("Running whisper node runner: %s", " ".join(cmd))
         env = os.environ.copy()
         if not is_gpu_available():

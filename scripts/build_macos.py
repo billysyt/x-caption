@@ -145,6 +145,21 @@ def build_ui(root: Path):
     log_success("UI built successfully")
 
 
+def prepare_node_runtime(root: Path):
+    """Stage Node.js runtime for bundling (needed by whisper/video.mjs)."""
+    node_script = root / "scripts" / "prepare_node_runtime.py"
+    if not node_script.exists():
+        log_warning(f"Node runtime helper not found: {node_script}")
+        return
+
+    if os.environ.get("XCAPTION_SKIP_NODE_RUNTIME"):
+        log_warning("Skipping Node runtime bundling (XCAPTION_SKIP_NODE_RUNTIME set).")
+        return
+
+    python_exe = get_python_executable()
+    run_command([python_exe, str(node_script)], cwd=root)
+
+
 def build_app_bundle(root: Path):
     """Build the .app bundle using PyInstaller."""
     log_header("Building .app Bundle with PyInstaller")
@@ -416,6 +431,9 @@ def main():
 
     # Build UI
     build_ui(root)
+
+    # Stage Node runtime (for whisper/video.mjs)
+    prepare_node_runtime(root)
 
     # Build app bundle
     app_path = build_app_bundle(root)

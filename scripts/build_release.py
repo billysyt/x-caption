@@ -22,10 +22,14 @@ def main() -> int:
     root = _repo_root()
 
     build_ui = root / "scripts" / "build_ui.py"
+    node_runtime = root / "scripts" / "prepare_node_runtime.py"
     spec = root / "xcaption_native.spec"
 
     if not build_ui.exists():
         print(f"[ERR] Missing script: {build_ui}")
+        return 2
+    if not node_runtime.exists():
+        print(f"[ERR] Missing script: {node_runtime}")
         return 2
     if not spec.exists():
         print(f"[ERR] Missing PyInstaller spec: {spec}")
@@ -42,6 +46,8 @@ def main() -> int:
             subprocess.run([sys.executable, str(icon_builder)], cwd=str(root), check=True, env=env)
 
     subprocess.run([sys.executable, str(build_ui)], cwd=str(root), check=True, env=env)
+    if not env.get("XCAPTION_SKIP_NODE_RUNTIME"):
+        subprocess.run([sys.executable, str(node_runtime)], cwd=str(root), check=True, env=env)
     subprocess.run(
         [sys.executable, "-m", "PyInstaller", str(spec), "--clean", "--noconfirm"],
         cwd=str(root),
